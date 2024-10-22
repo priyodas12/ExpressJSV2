@@ -67,6 +67,7 @@ app.post('/api/v1/customers', async (req, res) => {
 	const customer = new Customer({
 		customerName: customerName ? customerName : faker.name.fullName(),
 		_id: randomUUID().toString(),
+		customerId: Math.floor(Math.random() * 9000000000),
 		email: faker.internet.email(),
 		address: faker.location.streetAddress(),
 		createdAt: faker.date.past(),
@@ -75,12 +76,34 @@ app.post('/api/v1/customers', async (req, res) => {
 		mobile: Math.floor(Math.random() * 9000000000) + 1000000000,
 	});
 
-	//console.log('customer\n', customer);
 	const customerSaved = await customer.save();
 
 	res.send(customerSaved);
 
 	console.log(
-		`Saved customer: \n${customer}\n -----------------------------------------`,
+		`Saved customer: \n${customer._id}\n -----------------------------------------`,
 	);
+});
+
+app.get('/api/v1/customers/:id', async (req, res) => {
+	const id = req.params.id;
+
+	console.log('Fetching Customer: {}', id);
+
+	const customerFetched = await Customer.findOne({ customerId: id });
+
+	console.log('CustomerId Fetched: {}', customerFetched?.customerId);
+
+	res.send(customerFetched);
+});
+
+app.get('/api/v1/customers', async (req, res) => {
+	console.log('\n-----------fetching all customers------------\n');
+	const customerFetched = await Customer.find();
+
+	customerFetched.map((customer) =>
+		console.log('CustomerId Fetched: ', customer._id),
+	);
+
+	res.send(customerFetched);
 });

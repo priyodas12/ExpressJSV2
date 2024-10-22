@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const customerSchema = new mongoose.Schema({
 	_id: { type: String, default: uuidv4, required: true },
+	customerId: { type: Number, required: true },
 	customerName: { type: String, required: true },
 	password: { type: String, required: true },
 	mobile: { type: String, required: true },
